@@ -97,22 +97,23 @@ check that the keys in `.env` work; a missing key is reported there.
 A task is a folder with three things: the "before" (the SolidWorks files
 the engineer would start from), the prompt they would be given, and a
 one-line settings file.
-There is a blank one waiting at `tasks\1_example`. Rename it to your
-task's number and a short name, for example `tasks\12_widget_bracket`
-(copy it instead if you want to make more than one). Then, in Windows
-Explorer, open that folder and:
+There is a finished example at `tasks\1_playstation_controller`: a
+controller body and a prompt asking for it to be widened and made
+left-handed. You can run a model on it as-is in step 7 to see the whole
+thing work. To make your own, copy that folder to your task's number and
+a short name, for example `tasks\12_widget_bracket`, then, in Windows
+Explorer, open the copy and:
 
 1. **`environment\`**: put the "before" model here. Rename the main part
    or assembly to `input.sldprt` or `input.sldasm`. For an assembly, put
    its parts here too, with their real names. Nothing else goes in this
    folder.
-2. **`instruction.md`**: open it in Notepad and replace the text with the
+2. **`instruction.md`**: open it in Notepad and replace the text with your
    prompt, worded exactly as you would give it to another engineer. Keep
-   the last line that names the result file, and make it match what you
-   want built, for example:
+   a last line that names the result file as `/app/<name>`, for example:
    `Save the finished assembly as /app/solution.sldasm.`
-3. **`task.toml`**: open it in Notepad. Set `program = "SolidWorks"` and
-   replace the other values in angle brackets like `<slug>`.
+3. **`task.toml`**: open it in Notepad and replace the name and
+   description. Leave `program = "SolidWorks"`.
 
 That is the whole task: a before and a prompt. There is no answer key.
 
@@ -123,7 +124,7 @@ through its API, so it has to be running. Then:
 
 ```powershell
 cd C:\Dev\cad-eval-set\cad-eval-set
-python tools\try_model.py claude tasks\12_widget_bracket
+python tools\try_model.py claude tasks\1_playstation_controller
 ```
 
 The model reads your prompt, gets a working folder with your input files,
@@ -134,8 +135,8 @@ yourself while it runs.
 To try a different model, change the first word:
 
 ```powershell
-python tools\try_model.py gpt tasks\12_widget_bracket
-python tools\try_model.py claude:fable51 tasks\12_widget_bracket
+python tools\try_model.py gpt tasks\1_playstation_controller
+python tools\try_model.py claude:fable51 tasks\1_playstation_controller
 ```
 
 You may see a warning that the run is "on the HOST". For a SolidWorks

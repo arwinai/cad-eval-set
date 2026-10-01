@@ -34,9 +34,12 @@ Without Docker, `--allow-host` runs the model on this machine instead.
 
 ## Adding a task
 
-`tasks/1_example/` is a blank task: edit it in place, or copy it to
-`tasks/<n>_<slug>/` where `n` is the task's number on the tracking sheet.
-Task folders are not committed; they live on your machine. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
+`tasks/1_playstation_controller/` is a finished example: a SolidWorks
+controller body as the before, and a prompt asking for it to be widened
+and converted to a left-handed layout. Copy it to `tasks/<n>_<slug>/`,
+where `n` is your task's number on the tracking sheet, and replace its
+contents. Task folders other than the example are not committed; they
+live on your machine. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
 `STEP`, `Blender`) is `program` in the task's `task.toml`; it picks the
 container the model runs in. Inside, fill in:
 
@@ -52,9 +55,9 @@ spec, including how to bring a task in from a Drive folder.
 ## Trying a model on it
 
 ```bash
-python3 tools/try_model.py claude tasks/12_widget_bracket
-python3 tools/try_model.py gpt 12_widget_bracket
-python3 tools/try_model.py claude:fable51 tasks/12_widget_bracket --max-turns 200
+python3 tools/try_model.py claude tasks/1_playstation_controller
+python3 tools/try_model.py gpt 1_playstation_controller
+python3 tools/try_model.py claude:fable51 tasks/1_playstation_controller --max-turns 200
 ```
 
 The model is `route[:variant]`: `claude[:sonnet5|opus55|fable51]`, `gpt`,
@@ -62,7 +65,8 @@ The model is `route[:variant]`: `claude[:sonnet5|opus55|fable51]`, `gpt`,
 real workspace with the task's inputs, a shell and the machine's CAD
 toolchain, and works until it writes the deliverable or runs out of turns.
 
-Everything lands in `<task>/_runs/<model>_<timestamp>/`, gitignored:
+The example is a SolidWorks task, so it needs Windows with SolidWorks
+running. Everything lands in `<task>/_runs/<model>_<timestamp>/`, gitignored:
 
 - `after/`: the file the prompt asked for, plus any parts that go with it
 - `workspace/`: the model's scratch files
@@ -105,7 +109,7 @@ cad-eval-set/
 ├── tools/
 │   └── try_model.py         #   run one model on one task, keep its after/
 └── tasks/                   # tasks go here, one folder each (not committed)
-    └── 1_example/           #   a blank task to edit or copy
+    └── 1_playstation_controller/   # the example: copy it to start a task
 ```
 
 ## Relationship to openai-eval-set
