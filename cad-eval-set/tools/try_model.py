@@ -104,6 +104,15 @@ OPAQUE_EXTS = {".sldprt", ".sldasm", ".slddrw", ".fcstd", ".docx", ".xlsx",
                ".blend"}
 SKIP_NAMES = {"Dockerfile", ".gitkeep"}
 
+
+def is_task_file(p: Path) -> bool:
+    """A real task input, as opposed to housekeeping. SolidWorks drops a
+    `~$name.SLDPRT` lock file beside any document it has open; it vanishes
+    when the document closes, which seal_solidworks() does before staging,
+    so a run that counted it died copying a file that no longer existed."""
+    return (p.is_file() and p.name not in SKIP_NAMES
+            and not p.name.startswith("~$") and not p.name.startswith("."))
+
 #: Checked when FREECAD_CMD is unset -- the Windows installer puts it under
 #: AppData\Local\Programs, not Program Files, which is a common wrong guess.
 FREECAD_FALLBACKS = (
@@ -156,7 +165,7 @@ def task_program(task_dir: Path) -> str:
     """CadQuery, FreeCAD, SolidWorks, STEP or Blender, from what is in
     environment/. This picks the container image and the sandbox."""
     env = task_dir / "environment"
-    files = [p for p in env.rglob("*") if p.is_file()] if env.is_dir() else []
+    files = [p for p in env.rglob("*") if is_task_file(p)] if env.is_dir() else []
     exts = {p.suffix.lower() for p in files}
     for ext, program in PROGRAM_BY_EXT:
         if ext in exts:
@@ -1492,8 +1501,7 @@ def main(argv=None) -> int:
     # freecadcmd and the SolidWorks session available they are openable, and
     # that is the whole point of running in a workspace.
     env_dir = task_dir / "environment"
-    staged = sorted(f for f in env_dir.rglob("*")
-                    if f.is_file() and f.name not in SKIP_NAMES) \
+    staged = sorted(f for f in env_dir.rglob("*") if is_task_file(f)) \
         if env_dir.is_dir() else []
 
     # Keep two views of the task inputs from this point on.

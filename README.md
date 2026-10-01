@@ -216,6 +216,11 @@ winget install --id Anthropic.ClaudeCode -e
 is not active. Run `.venv\Scripts\activate` in the inner folder first
 (step 5).
 
+**`No such file or directory: ...\~$input.SLDPRT`.** Pull the latest repo;
+older versions tripped over the lock file SolidWorks leaves beside an open
+document. You can also close the task's input file in SolidWorks before
+running.
+
 **The model says SolidWorks is not running.** Start SolidWorks, then run
 again. If SolidWorks is open and it still says so, close SolidWorks
 fully (check Task Manager for `SLDWORKS.exe`) and start it again.
