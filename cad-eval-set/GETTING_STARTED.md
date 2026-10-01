@@ -52,13 +52,12 @@ Pick where you want it. `C:\Dev` is a good choice. Then:
 mkdir C:\Dev
 cd C:\Dev
 gh auth login
-git clone <REPO URL> cad-eval-set
+git clone https://github.com/arwinai/cad-eval-set.git cad-eval-set
 cd cad-eval-set
 ```
 
 `gh auth login` asks you to sign in to GitHub in your browser the first
-time. Replace `<REPO URL>` with the address from the green **Code** button
-on the repo's GitHub page.
+time; the repo is private, so the clone needs it.
 
 You now have `C:\Dev\cad-eval-set`. Inside it is another folder also
 called `cad-eval-set`; that inner one is where the tools live. The outer
