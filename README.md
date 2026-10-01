@@ -1,16 +1,4 @@
-# cad-eval-set
-
-A place to try out candidate CAD tasks. A task is a "before" (the files
-an engineer starts from) and a prompt. You run a frontier model against
-it, open the "after" it produced, and decide by eye whether it is good
-enough or a failure. There are no reference solutions, adversarial
-examples or automatic graders here.
-
-**Why this exists.** Recent tasks have been getting too easy: the
-frontier models solve most of them cleanly on the first try, and a task
-like that tells us nothing. So before anyone builds a full task, the
-prompt gets tried on a model first, and only tasks a strong model
-struggles with go further.
+# Getting started (for SolidWorks engineers)
 
 This guide takes you from nothing to running an AI model on a task you
 made, on a Windows PC with SolidWorks. You do not need to know how to
@@ -76,8 +64,7 @@ docker info
 ```
 
 The first run for each program builds its image (a few minutes); you do
-not build anything by hand. On macOS: `brew install --cask docker` and
-open the Docker app.
+not build anything by hand.
 
 ## 3. Download the repo
 
@@ -232,42 +219,3 @@ fully (check Task Manager for `SLDWORKS.exe`) and start it again.
 
 **Something else.** Copy the last twenty lines from the terminal and send
 them to the group chat, or ask Claude.
-
-## Reference
-
-**Models.** The first word of the run command is `route[:variant]`:
-`claude[:sonnet5|opus55|fable51]`, `gpt[:gpt56|astra]` (astra is GPT-6),
-`gemini[:pro|flash]`, `grok`, `kimi`, `deepseek`, `glm`. Add
-`--max-turns 200` to cap how many tool calls the model gets.
-
-**Task layout.** A task is a folder under `tasks/` holding `environment/`
-(the before, with the main model renamed `input.<ext>`; for an assembly,
-its parts beside it with their real names) and `instruction.md` (the
-prompt, ending with a line that names the result as `/app/<name>`). The
-CAD program is read off the input file's extension. Only
-`playstation_controller/` and `template/` are committed; your own task
-folders stay on your machine.
-
-**Repo layout.**
-
-```
-cad-eval-set/
-├── env_requirements.txt
-├── common/                  # model routes and the agent's sandbox
-│   ├── call_claude.py, call_gpt.py, call_gemini.py, ...
-│   ├── agent_workspace.py, agent_cli.py, workspace_mcp.py
-│   ├── solidworks_session.py
-│   └── docker/              #   base images per CAD program
-├── tools/
-│   └── try_model.py         #   run one model on one task, keep its after/
-└── tasks/
-    ├── playstation_controller/   # a finished example
-    └── template/                 # copy this to start a task
-```
-
-**Relationship to openai-eval-set.** `common/` and `tools/` are copies of
-the same files in openai-eval-set as of 30 September 2026. Fixes made
-there should be copied here and vice versa. This repo differs on
-purpose: tasks live in one `tasks/` folder with the CAD program inferred
-from the input file, there are no solutions, examples or graders, and
-only what `tools/try_model.py` needs to run a model is kept.
