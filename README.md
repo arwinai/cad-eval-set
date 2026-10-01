@@ -1,3 +1,5 @@
+## **Created this GitHub repository for testing any models we're creating BEFORE we create them.**
+
 # Getting started (for SolidWorks engineers)
 
 This guide takes you from nothing to running an AI model on a task you
