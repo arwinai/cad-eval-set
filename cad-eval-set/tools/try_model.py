@@ -1,14 +1,14 @@
 """Run one model against one task and keep what it produced for a person to judge.
 
-    python3 tools/try_model.py claude tasks/4_sling_lift
-    python3 tools/try_model.py gpt tasks/10_living_hinge
-    python3 tools/try_model.py gemini:flash tasks/3_smartwatch
-    python3 tools/try_model.py claude:fable51 36_helical_gear
-    python3 tools/try_model.py claude:opus55 tasks/10_living_hinge
-    python3 tools/try_model.py grok tasks/10_living_hinge
-    python tools/try_model.py kimi:k27code tasks/36_helical_gear
-    python3 tools/try_model.py deepseek tasks/10_living_hinge
-    python3 tools/try_model.py glm tasks/4_sling_lift
+    python3 tools/try_model.py claude tasks/sling_lift
+    python3 tools/try_model.py gpt tasks/living_hinge
+    python3 tools/try_model.py gemini:flash tasks/smartwatch
+    python3 tools/try_model.py claude:fable51 helical_gear
+    python3 tools/try_model.py claude:opus55 tasks/living_hinge
+    python3 tools/try_model.py grok tasks/living_hinge
+    python tools/try_model.py kimi:k27code tasks/helical_gear
+    python3 tools/try_model.py deepseek tasks/living_hinge
+    python3 tools/try_model.py glm tasks/sling_lift
 
 
 The model is `route[:variant]` -- route is claude / gpt / gemini / grok /
@@ -16,8 +16,9 @@ kimi / deepseek / glm, variant is that route's own model key (claude:
 sonnet5|opus55|fable51, gemini: pro|flash, kimi: k2.7-code; gpt, grok,
 deepseek and glm each have a single deployment and take no variant). The task
 is just its folder name under `tasks/`, matched case-insensitively, so
-`4_Sling_Lift` or `tasks/4_sling_lift` both find `tasks/4_sling_lift`. Which
-CAD program the task uses comes from `program` in its task.toml.
+`Sling_Lift` or `tasks/sling_lift` both find `tasks/sling_lift`. Which
+CAD program the task uses is read off the before model's extension in
+`environment/` (`input.SLDPRT` is SolidWorks, `input.FCStd` FreeCAD, ...).
 
 Everything lands in `<task>/_runs/<model>_<timestamp>/`, which is gitignored:
 the prompt actually sent, the model's raw answer, the "after" it built under
@@ -52,7 +53,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import tomllib
 import re
 import shutil
 import sys
@@ -82,8 +82,8 @@ AGENT_MAX_TURNS = 1000
 
 
 #: The one folder under ROOT that holds the tasks. Which CAD
-#: program a task uses is `program` in its task.toml, not a
-#: parent folder name.
+#: program a task uses is inferred from its input file's extension, not
+#: from a parent folder name.
 TASKS_DIR = "tasks"
 
 #: What the model's answer can be written out as directly.
@@ -123,12 +123,12 @@ def resolve_task(name: str) -> Path:
     wanted = Path(name.replace("\\", "/"))
     parts = [p for p in wanted.parts if p not in (".", "")]
     if len(parts) > 1 and parts[-2].lower() != TASKS_DIR:
-        raise SystemExit(f"{name!r}: tasks live under {TASKS_DIR}/<n>_<slug>; "
+        raise SystemExit(f"{name!r}: tasks live under {TASKS_DIR}/<slug>; "
                          "there are no per-program folders")
     task = parts[-1]
     cands = [d for d in (ROOT / TASKS_DIR).glob("*")
              if d.is_dir() and d.name.lower() == task.lower()]
-    cands = [c for c in cands if (c / "task.toml").is_file()]
+    cands = [c for c in cands if (c / "instruction.md").is_file()]
     if not cands:
         raise SystemExit(f"no task matching {name!r} (looked in {TASKS_DIR}/)")
     if len(cands) > 1:
@@ -137,26 +137,32 @@ def resolve_task(name: str) -> Path:
     return cands[0]
 
 
+#: Input extension -> CAD program. The primary input is `input.<ext>` in
+#: environment/; the first match in this order wins when several exist
+#: (an assembly over its parts, a CAD document over a neutral export).
+PROGRAM_BY_EXT = (
+    (".sldasm", "SolidWorks"), (".sldprt", "SolidWorks"),
+    (".slddrw", "SolidWorks"),
+    (".fcstd", "FreeCAD"),
+    (".blend", "Blender"),
+    (".py", "CadQuery"),
+    (".step", "STEP"), (".stp", "STEP"),
+)
+
+
 def task_program(task_dir: Path) -> str:
-    """`program` from the task's task.toml: CadQuery, FreeCAD,
-    SolidWorks, STEP or Blender. This is what picks the container image
-    and the sandbox mechanism, since the folder layout no longer says."""
-    try:
-        with open(task_dir / "task.toml", "rb") as f:
-            data = tomllib.load(f)
-        program = data.get("program") or data.get("metadata", {}).get("program", "")
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise SystemExit(f"{task_dir / 'task.toml'}: cannot read "
-                         f"program: {exc}")
-    program = str(program).strip()
-    if not program or program.startswith("<"):
-        raise SystemExit(f"{task_dir / 'task.toml'}: program must "
-                         "name the CAD program (CadQuery | FreeCAD | "
-                         "SolidWorks | STEP | Blender)")
-    for known in PROGRAM_IMAGE.keys() | {"SolidWorks", "Rhino"}:
-        if known.lower() == program.lower():
-            return known
-    return program
+    """CadQuery, FreeCAD, SolidWorks, STEP or Blender, from what is in
+    environment/. This picks the container image and the sandbox."""
+    env = task_dir / "environment"
+    files = [p for p in env.rglob("*") if p.is_file()] if env.is_dir() else []
+    exts = {p.suffix.lower() for p in files}
+    for ext, program in PROGRAM_BY_EXT:
+        if ext in exts:
+            return program
+    raise SystemExit(
+        f"{env}: cannot tell which CAD program this task uses -- put the "
+        "before model there as input.<ext> (one of "
+        + ", ".join(e for e, _ in PROGRAM_BY_EXT) + ")")
 
 
 def load_route(spec: str):
@@ -334,7 +340,7 @@ def run_agent_for(mod, route: str, variant, prompt: str, *, cwd,
 # escape route -- they are confined to cwd already.
 # ---------------------------------------------------------------------------
 
-#: CAD program (task.toml `program`) -> the base image that already
+#: CAD program (see task_program) -> the base image that already
 #: carries that program's toolchain. Built from common/docker/*.Dockerfile;
 #: a CAD program without an image runs on the host.
 PROGRAM_IMAGE = {
@@ -1396,7 +1402,7 @@ def main(argv=None) -> int:
               "deepseek | glm")
     )
     ap.add_argument("task",
-                    help="e.g. tasks/4_sling_lift (case-insensitive)")
+                    help="e.g. tasks/sling_lift (case-insensitive)")
     ap.add_argument("--max-turns", type=int, default=None,
                     help=f"tool-call budget for the run (default {AGENT_MAX_TURNS})")
     ap.add_argument("--allow-host", action="store_true",

@@ -97,10 +97,10 @@ check that the keys in `.env` work; a missing key is reported there.
 A task is a folder with three things: the "before" (the SolidWorks files
 the engineer would start from), the prompt they would be given, and a
 one-line settings file.
-There is a finished example at `tasks\1_playstation_controller`: a
+There is a finished example at `tasks\playstation_controller`: a
 controller body and a prompt asking for it to be widened and made
 left-handed. You can run a model on it as-is in step 7 to see the whole
-thing work. To make your own, copy `tasks\2_template` to your task's
+thing work. To make your own, copy `tasks\template` to your task's
 number and a short name, for example `tasks\12_widget_bracket`, then, in
 Windows Explorer, open the copy and:
 
@@ -124,7 +124,7 @@ through its API, so it has to be running. Then:
 
 ```powershell
 cd C:\Dev\cad-eval-set\cad-eval-set
-python tools\try_model.py claude tasks\1_playstation_controller
+python tools\try_model.py claude tasks\playstation_controller
 ```
 
 The model reads your prompt, gets a working folder with your input files,
@@ -135,8 +135,8 @@ yourself while it runs.
 To try a different model, change the first word:
 
 ```powershell
-python tools\try_model.py gpt tasks\1_playstation_controller
-python tools\try_model.py claude:fable51 tasks\1_playstation_controller
+python tools\try_model.py gpt tasks\playstation_controller
+python tools\try_model.py claude:fable51 tasks\playstation_controller
 ```
 
 You may see a warning that the run is "on the HOST". For a SolidWorks

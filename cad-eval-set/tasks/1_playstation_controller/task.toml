@@ -1,9 +1,0 @@
-# Which CAD program the task uses. tools/try_model.py reads this to pick
-# the container image (CadQuery | FreeCAD | STEP | Blender) or, for
-# SolidWorks, the Windows sandbox account.
-program = "SolidWorks"
-
-[task]
-name = "playstation_controller"
-description = "Widen a PS3 controller body by 15mm and convert it to a left-handed layout without mirroring text or standard parts"
-author = "StoryGold"

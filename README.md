@@ -34,9 +34,9 @@ Without Docker, `--allow-host` runs the model on this machine instead.
 
 ## Adding a task
 
-`tasks/1_playstation_controller/` is a finished example: a SolidWorks
+`tasks/playstation_controller/` is a finished example: a SolidWorks
 controller body as the before, and a prompt asking for it to be widened
-and converted to a left-handed layout. `tasks/2_template/` is the same
+and converted to a left-handed layout. `tasks/template/` is the same
 shape with the contents blanked out. Copy the template to
 `tasks/<n>_<slug>/`, where `n` is your task's number on the tracking
 sheet, and fill it in. Other task folders are not committed; they live
@@ -56,9 +56,9 @@ spec, including how to bring a task in from a Drive folder.
 ## Trying a model on it
 
 ```bash
-python3 tools/try_model.py claude tasks/1_playstation_controller
-python3 tools/try_model.py gpt 1_playstation_controller
-python3 tools/try_model.py claude:fable51 tasks/1_playstation_controller --max-turns 200
+python3 tools/try_model.py claude tasks/playstation_controller
+python3 tools/try_model.py gpt playstation_controller
+python3 tools/try_model.py claude:fable51 tasks/playstation_controller --max-turns 200
 ```
 
 The model is `route[:variant]`: `claude[:sonnet5|opus55|fable51]`, `gpt`,
@@ -110,8 +110,8 @@ cad-eval-set/
 ├── tools/
 │   └── try_model.py         #   run one model on one task, keep its after/
 └── tasks/                   # tasks go here, one folder each (not committed)
-    ├── 1_playstation_controller/   # a finished example
-    └── 2_template/                 # copy this to start a task
+    ├── playstation_controller/   # a finished example
+    └── template/                 # copy this to start a task
 ```
 
 ## Relationship to openai-eval-set

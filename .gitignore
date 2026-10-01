@@ -17,7 +17,7 @@ _runs/
 
 # Tasks live on the machine that made them. Only the blank example is in git.
 cad-eval-set/tasks/*
-!cad-eval-set/tasks/1_playstation_controller/
+!cad-eval-set/tasks/playstation_controller/
 
 # CAD scratch and lock files.
 *.FCBak
@@ -25,4 +25,4 @@ cad-eval-set/tasks/*
 *.blend1
 ~$*.SLDPRT
 ~$*.SLDASM
-!cad-eval-set/tasks/2_template/
+!cad-eval-set/tasks/template/
