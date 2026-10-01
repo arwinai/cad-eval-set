@@ -1,4 +1,4 @@
-## **Created this GitHub repository for testing any models we're creating BEFORE we create them.**
+## **This repo is for trying a task on the AI models before we build it out in full.**
 
 # Getting started (for SolidWorks engineers)
 
