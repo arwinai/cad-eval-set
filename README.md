@@ -78,7 +78,7 @@ or edit it:
 notepad .env
 ```
 
-## 5. Install the Python packages (once)
+## 5. Install the Python packages
 
 ```powershell
 cd C:\Dev\cad-eval-set\cad-eval-set
