@@ -1,4 +1,4 @@
-## **This repo is for testing a task on the AI models before we build it out in full. Tasks have been getting too easy: the models solve most of them on the first try, so a full build with a reference solution and grader tells us nothing. Make the before and the prompt here, run a model on it, and see whether it struggles. Only the tasks that hold up go on to be built properly.**
+## **This repo is for testing a task on the AI models before we build it out in full. Tasks have been getting too easy: the models solve most of them on the first try.**
 
 # Getting started (for SolidWorks engineers)
 
