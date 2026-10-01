@@ -151,9 +151,11 @@ yourself while it runs.
 To try a different model, change the first word:
 
 ```powershell
-python tools\try_model.py gpt:astra tasks\playstation_controller
-python tools\try_model.py claude:fable51 tasks\playstation_controller
+python tools\try_model.py gpt tasks\playstation_controller
+python tools\try_model.py claude:opus55 tasks\playstation_controller
 ```
+
+`claude` on its own is Claude Fable 5.1 and `gpt` is GPT-6 Astra.
 
 ## 8. Look at what it did
 

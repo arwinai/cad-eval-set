@@ -43,7 +43,7 @@ GPT_CONFIG = {
                or os.getenv("AZURE_API_KEY"),
     "endpoint": os.getenv(
         "AZURE_GPT_ENDPOINT", "https://gtm-research.openai.azure.com/"),
-    "deployment_name": os.getenv("AZURE_GPT_DEPLOYMENT", "gpt-5.6-sol"),
+    "deployment_name": os.getenv("AZURE_GPT_DEPLOYMENT", "gpt-6-astra"),
     # 2025-03-01-preview is the floor for the Responses API, which
     # `run_agent` needs; chat completions (the one-shot path) is unaffected
     # by the bump.
