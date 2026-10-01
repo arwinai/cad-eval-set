@@ -188,18 +188,6 @@ PowerShell.
 the wrong place or has the wrong name. It must be
 `C:\Dev\cad-eval-set\.env`, in the outer folder, with no `.txt` ending.
 
-**`No matching distribution found for pywin32==306`** (or any
-`Could not find a version` error from `pip install`). The pip that ran
-belongs to a different Python than the 3.11 installed in step 2, usually a
-newer one that came with the PC. Run `python --version`; if it does not say
-3.11, install the packages with the 3.11 copy explicitly:
-
-```powershell
-py -3.11 -m pip install -r env_requirements.txt
-```
-
-and run the tools the same way, with `py -3.11` in place of `python`.
-
 **The model says SolidWorks is not running.** Start SolidWorks, then run
 again. If SolidWorks is open and it still says so, close SolidWorks
 fully (check Task Manager for `SLDWORKS.exe`) and start it again.
