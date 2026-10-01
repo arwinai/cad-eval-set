@@ -34,4 +34,4 @@ google-genai==2.23.0
 pillow==12.3.0
 
 # --- Windows only: SolidWorks -----------------------------------------
-pywin32==306; sys_platform == "win32"
+pywin32>=306; sys_platform == "win32"
