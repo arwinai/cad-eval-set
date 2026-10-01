@@ -98,7 +98,7 @@ MODELS = {
     "opus5.5": os.getenv("CLAUDE_MODEL_OPUS55", "claude-opus-5-5"),
 }
 
-DEFAULT_MODEL = os.getenv("CLAUDE_DEFAULT_MODEL", "fable5.1")
+DEFAULT_MODEL = "fable5.1"
 
 #: `xhigh` is the sweet spot for agentic/coding work on both of these; the
 #: judge path drops to `high`, since it only has to justify a score.
