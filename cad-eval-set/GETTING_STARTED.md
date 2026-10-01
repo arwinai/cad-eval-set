@@ -66,20 +66,20 @@ one is where your keys go.
 
 ## 4. Add your keys
 
-In `C:\Dev\cad-eval-set` there is a file named `.env.example`. Make a copy
-of it named `.env` (no `.example`) in the same folder:
+You were given a `.env` file with the keys in it. Put it in
+`C:\Dev\cad-eval-set` (the outer folder), named exactly `.env`. To check
+or edit it:
 
 ```powershell
-copy .env.example .env
 notepad .env
 ```
 
-Fill in the values you were given after each `=`. The two that matter
-most for trying models are `AZURE_API_KEY` and `AZURE_API_KEY_GTM_RESEARCH`.
+Each key is a line of the form `NAME=value`. The two that matter most
+for trying models are `AZURE_API_KEY` and `AZURE_API_KEY_GTM_RESEARCH`.
 Leave `FREECAD_CMD` empty unless you have FreeCAD. Save and close Notepad.
 
 If Windows Explorer hides file extensions, the copy may be called
-`.env.txt` without you seeing it. The `copy` command above avoids that.
+`.env.txt` without you seeing it. Check the name in PowerShell with `dir`.
 
 ## 5. Install the Python packages (once)
 

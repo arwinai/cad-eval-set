@@ -13,7 +13,7 @@ step on Windows.
 ## Setup
 
 ```bash
-cp ../.env.example ../.env          # then fill in the values you were given
+# put the .env you were given at the git root, one level above this folder
 pip install -r env_requirements.txt   # the model SDKs and agent tooling
 ```
 
