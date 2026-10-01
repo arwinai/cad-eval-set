@@ -133,6 +133,7 @@ To try a different model, change the first word:
 
 ```powershell
 python tools\try_model.py gpt tasks\playstation_controller
+python tools\try_model.py gpt:astra tasks\playstation_controller
 python tools\try_model.py claude:fable51 tasks\playstation_controller
 ```
 

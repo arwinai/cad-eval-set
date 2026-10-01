@@ -56,10 +56,12 @@ spec, including how to bring a task in from a Drive folder.
 ```bash
 python3 tools/try_model.py claude tasks/playstation_controller
 python3 tools/try_model.py gpt playstation_controller
+python3 tools/try_model.py gpt:astra playstation_controller
 python3 tools/try_model.py claude:fable51 tasks/playstation_controller --max-turns 200
 ```
 
-The model is `route[:variant]`: `claude[:sonnet5|opus55|fable51]`, `gpt`,
+The model is `route[:variant]`: `claude[:sonnet5|opus55|fable51]`,
+`gpt[:gpt56|astra]` (astra is GPT-6),
 `gemini[:pro|flash]`, `grok`, `kimi`, `deepseek`, `glm`. The model gets a
 real workspace with the task's inputs, a shell and the machine's CAD
 toolchain, and works until it writes the deliverable or runs out of turns.

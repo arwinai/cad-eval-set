@@ -2,6 +2,7 @@
 
     python3 tools/try_model.py claude tasks/sling_lift
     python3 tools/try_model.py gpt tasks/living_hinge
+    python3 tools/try_model.py gpt:astra tasks/living_hinge
     python3 tools/try_model.py gemini:flash tasks/smartwatch
     python3 tools/try_model.py claude:fable51 helical_gear
     python3 tools/try_model.py claude:opus55 tasks/living_hinge
@@ -13,8 +14,9 @@
 
 The model is `route[:variant]` -- route is claude / gpt / gemini / grok /
 kimi / deepseek / glm, variant is that route's own model key (claude:
-sonnet5|opus55|fable51, gemini: pro|flash, kimi: k2.7-code; gpt, grok,
-deepseek and glm each have a single deployment and take no variant). The task
+sonnet5|opus55|fable51, gpt: gpt56|astra (GPT-6), gemini: pro|flash,
+kimi: k2.7-code; grok, deepseek and glm each have a single deployment and
+take no variant). The task
 is just its folder name under `tasks/`, matched case-insensitively, so
 `Sling_Lift` or `tasks/sling_lift` both find `tasks/sling_lift`. Which
 CAD program the task uses is read off the before model's extension in
@@ -187,10 +189,9 @@ def load_route(spec: str):
         raise SystemExit(f"unknown route {route!r} "
                          "(claude, gpt, gemini, grok, kimi, deepseek or glm)")
 
-    if route in ("gpt", "grok", "deepseek", "glm"):
+    if route in ("grok", "deepseek", "glm"):
         if variant:
             env_name = {
-                "gpt": "AZURE_GPT_DEPLOYMENT",
                 "grok": "AZURE_GROK_DEPLOYMENT",
                 "deepseek": "AZURE_DEEPSEEK_DEPLOYMENT",
                 "glm": "AZURE_GLM_DEPLOYMENT",
@@ -316,9 +317,9 @@ def run_agent_for(mod, route: str, variant, prompt: str, *, cwd,
     if progress is not None:
         kw["progress"] = progress
 
-    if route in ("gpt", "grok", "deepseek", "glm"):
+    if route in ("grok", "deepseek", "glm"):
         kw["images"] = inline
-    elif route == "kimi":
+    elif route in ("kimi", "gpt"):
         kw["images"] = inline
         kw["model"] = variant
     else:
@@ -1397,7 +1398,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument(
         "model",
-        help=("claude[:sonnet5|opus55|fable51] | gpt | "
+        help=("claude[:sonnet5|opus55|fable51] | gpt[:gpt56|astra] | "
               "gemini[:pro|flash] | grok | kimi[:k27code|k3] | "
               "deepseek | glm")
     )

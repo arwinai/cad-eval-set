@@ -51,6 +51,28 @@ GPT_CONFIG = {
     "reasoning_effort": "xhigh",
 }
 
+#: Model variants for try_model's `gpt[:variant]`: variant -> Azure
+#: deployment on the resource above. `gpt` alone is DEFAULT_MODEL, which
+#: AZURE_GPT_DEPLOYMENT overrides as before.
+MODELS = {
+    "gpt56": "gpt-5.6-sol",
+    "astra": "gpt-6-astra",     # GPT-6, codename Astra
+}
+MODEL_ALIASES = {"gpt6": "astra", "gpt-6": "astra", "sol": "gpt56",
+                 "gpt5.6": "gpt56"}
+DEFAULT_MODEL = next((k for k, v in MODELS.items()
+                      if v == GPT_CONFIG["deployment_name"]),
+                     GPT_CONFIG["deployment_name"])
+
+
+def deployment_for(model: str | None) -> str:
+    """A variant key, an alias, or a raw deployment name -> deployment."""
+    if not model:
+        return GPT_CONFIG["deployment_name"]
+    model = MODEL_ALIASES.get(model, model)
+    return MODELS.get(model, model)
+
+
 DEFAULT_MAX_COMPLETION_TOKENS = 100000
 
 
@@ -378,8 +400,12 @@ def run_agent(prompt: str, *, cwd, images=(), image_b64=(),
               max_turns: int = DEFAULT_AGENT_MAX_TURNS,
               reasoning_effort: str | None = None,
               require_file: str | None = None,
+              model: str | None = None,
               verbose: bool = True, **_ignored):
     """Codex on the task. Returns (final_text, meta), like the other routes.
+
+    `model` is a MODELS key (gpt56, astra), an alias, or a raw deployment
+    name; None means the configured default.
 
     Codex decides when it is finished. `max_turns` caps its tool calls --
     Codex has no turn setting of its own -- and passing it ends the run.
@@ -426,9 +452,10 @@ def run_agent(prompt: str, *, cwd, images=(), image_b64=(),
     # here lets try_model recover the work completed before Ctrl-C, an API error,
     # or a CLI failure prevents run_agent() from reaching its normal return.
     progress = _ignored.get("progress")
+    deployment = deployment_for(model)
 
     if progress is not None:
-        progress.update(model=GPT_CONFIG["deployment_name"], turns=0,
+        progress.update(model=deployment, turns=0,
                         transcript=transcript, harness="codex exec",)
 
     def on_event(ev):
@@ -491,7 +518,7 @@ def run_agent(prompt: str, *, cwd, images=(), image_b64=(),
         with WorkspaceMCP(cwd) as mcp:
             cmd = [_codex_cli(), "exec", "--json", "--strict-config",
                    "--skip-git-repo-check",
-                   "-m", GPT_CONFIG["deployment_name"],
+                   "-m", deployment,
                    "-s", "workspace-write", "-C", str(cwd)]
             for c in _codex_config(mcp.url, effort):
                 cmd += ["-c", c]
@@ -542,7 +569,7 @@ def run_agent(prompt: str, *, cwd, images=(), image_b64=(),
               + (f" -- turn budget exhausted ({max_turns})"
                  if state["exhausted"] else ""))
     return state["final"], {
-        "model": GPT_CONFIG["deployment_name"],
+        "model": deployment,
         #: tool calls, and the ceiling itself when it ran out -- what
         #: try_model's `_exhausted` reads
         "turns": max_turns if state["exhausted"] else state["calls"],
@@ -552,8 +579,10 @@ def run_agent(prompt: str, *, cwd, images=(), image_b64=(),
     }
 
 
-def label() -> str:
-    return (f"GPT (Codex, Azure, deployment={GPT_CONFIG['deployment_name']}, "
+def label(model: str | None = None) -> str:
+    dep = deployment_for(model)
+    name = "GPT-6 Astra" if dep == MODELS["astra"] else "GPT"
+    return (f"{name} (Codex, Azure, deployment={dep}, "
             f"reasoning_effort={GPT_CONFIG['reasoning_effort']})")
 
 
