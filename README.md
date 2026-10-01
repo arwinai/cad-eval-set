@@ -101,9 +101,24 @@ notepad .env
 
 ## 5. Install the Python packages
 
+The packages go into a private folder for this repo (a "virtual
+environment"), so they cannot clash with any other Python tools on your PC.
+Create it once:
+
 ```powershell
 cd C:\Dev\cad-eval-set\cad-eval-set
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r env_requirements.txt
+```
+
+The prompt now starts with `(.venv)`. **Every time you open a new
+PowerShell to use the tools**, run the first two lines again (`cd` and
+`.venv\Scripts\activate`) first. If `activate` is refused with a message
+about running scripts, run this once and try again:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
 ## 6. Make a task
@@ -140,6 +155,7 @@ through its API, so it has to be running. Then:
 
 ```powershell
 cd C:\Dev\cad-eval-set\cad-eval-set
+.venv\Scripts\activate
 python tools\try_model.py claude tasks\playstation_controller
 ```
 
@@ -193,13 +209,16 @@ PowerShell.
 the wrong place or has the wrong name. It must be
 `C:\Dev\cad-eval-set\.env`, in the outer folder, with no `.txt` ending.
 
-**`'--effort <level>' argument 'xhigh' is invalid`.** Claude Code is
-missing or out of date, so the tool fell back to an old copy. Install or
-update it, then close and reopen PowerShell:
+**`'--effort <level>' argument 'xhigh' is invalid`.** Claude Code is out
+of date. Update it, then close and reopen PowerShell:
 
 ```powershell
 winget install --id Anthropic.ClaudeCode -e
 ```
+
+**`No module named ...`** when running the tools. The virtual environment
+is not active. Run `.venv\Scripts\activate` in the inner folder first
+(step 5).
 
 **The model says SolidWorks is not running.** Start SolidWorks, then run
 again. If SolidWorks is open and it still says so, close SolidWorks
