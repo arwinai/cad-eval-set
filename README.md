@@ -34,12 +34,9 @@ Without Docker, `--allow-host` runs the model on this machine instead.
 
 ## Adding a task
 
-```bash
-cp -r templates/task_template tasks/12_widget_bracket
-```
-
-Task folders are `tasks/<n>_<slug>/` where `n` is the task's number on the
-tracking sheet. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
+`tasks/1_example/` is a blank task: edit it in place, or copy it to
+`tasks/<n>_<slug>/` where `n` is the task's number on the tracking sheet.
+Task folders are not committed; they live on your machine. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
 `STEP`, `Blender`) is `program` in the task's `task.toml`; it picks the
 container the model runs in. Inside, fill in:
 
@@ -50,8 +47,7 @@ container the model runs in. Inside, fill in:
 | `task.toml` | `program`, a name and a one-line description. |
 
 That is the whole task. [filetree.MD](cad-eval-set/filetree.MD) is the full layout
-spec, including how to bring a task in from a Drive folder. The "before"
-CAD files are committed with the task; nothing else holds them.
+spec, including how to bring a task in from a Drive folder.
 
 ## Trying a model on it
 
@@ -108,8 +104,8 @@ cad-eval-set/
 │   └── docker/              #   base images per CAD program
 ├── tools/
 │   └── try_model.py         #   run one model on one task, keep its after/
-├── templates/task_template/ # copy this to start a task
-└── tasks/                   # tasks go here, one folder each
+└── tasks/                   # tasks go here, one folder each (not committed)
+    └── 1_example/           #   a blank task to edit or copy
 ```
 
 ## Relationship to openai-eval-set

@@ -97,15 +97,10 @@ check that the keys in `.env` work; a missing key is reported there.
 A task is a folder with three things: the "before" (the SolidWorks files
 the engineer would start from), the prompt they would be given, and a
 one-line settings file.
-Start by copying the template:
-
-```powershell
-cd C:\Dev\cad-eval-set\cad-eval-set
-Copy-Item -Recurse templates\task_template tasks\12_widget_bracket
-```
-
-Use your task's number and a short name instead of `12_widget_bracket`.
-Then, in Windows Explorer, open `tasks\12_widget_bracket` and:
+There is a blank one waiting at `tasks\1_example`. Rename it to your
+task's number and a short name, for example `tasks\12_widget_bracket`
+(copy it instead if you want to make more than one). Then, in Windows
+Explorer, open that folder and:
 
 1. **`environment\`**: put the "before" model here. Rename the main part
    or assembly to `input.sldprt` or `input.sldasm`. For an assembly, put
@@ -118,7 +113,6 @@ Then, in Windows Explorer, open `tasks\12_widget_bracket` and:
    `Save the finished assembly as /app/solution.sldasm.`
 3. **`task.toml`**: open it in Notepad. Set `program = "SolidWorks"` and
    replace the other values in angle brackets like `<slug>`.
-4. Delete the `README.md` inside the task folder.
 
 That is the whole task: a before and a prompt. There is no answer key.
 

@@ -3,7 +3,8 @@
 Every task lives at `tasks/<num>_<task_name>/`, where `<num>` is the task's
 number on the tracking sheet. Which CAD program the task uses (`CadQuery`,
 `FreeCAD`, `SolidWorks`, `STEP`, `Blender`) is `program` in its task.toml;
-there are no per-program folders.
+there are no per-program folders. `tasks/1_example/` is a blank task to
+edit or copy; task folders are not committed.
 
 ```
 tasks/<num>_<task_name>/

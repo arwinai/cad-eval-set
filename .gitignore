@@ -15,8 +15,11 @@ gen-lang-client-*.json
 # scratch). Regenerated on demand.
 _runs/
 
-# CAD scratch and lock files. The "before" models under tasks/ are
-# committed; nothing else holds them.
+# Tasks live on the machine that made them. Only the blank example is in git.
+cad-eval-set/tasks/*
+!cad-eval-set/tasks/1_example/
+
+# CAD scratch and lock files.
 *.FCBak
 *.fcbak
 *.blend1
