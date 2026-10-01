@@ -38,17 +38,15 @@ Without Docker, `--allow-host` runs the model on this machine instead.
 controller body as the before, and a prompt asking for it to be widened
 and converted to a left-handed layout. `tasks/template/` is the same
 shape with the contents blanked out. Copy the template to
-`tasks/<n>_<slug>/`, where `n` is your task's number on the tracking
-sheet, and fill it in. Other task folders are not committed; they live
-on your machine. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
-`STEP`, `Blender`) is `program` in the task's `task.toml`; it picks the
-container the model runs in. Inside, fill in:
+`tasks/<slug>/` and fill it in. Other task folders are not committed;
+they live on your machine. The CAD program (`CadQuery`, `FreeCAD`,
+`SolidWorks`, `STEP`, `Blender`) is read off the before model's
+extension and picks the container the model runs in. Inside, fill in:
 
 | Path | What goes there |
 |---|---|
 | `environment/` | The "before" files the solver receives, main model renamed `input.<ext>`. Nothing else. |
 | `instruction.md` | The prompt, verbatim. It must name the deliverable as `/app/<name>`. |
-| `task.toml` | `program`, a name and a one-line description. |
 
 That is the whole task. [filetree.MD](cad-eval-set/filetree.MD) is the full layout
 spec, including how to bring a task in from a Drive folder.
@@ -119,6 +117,7 @@ cad-eval-set/
 `common/` and `tools/` are copies of the same files in openai-eval-set as
 of 30 September 2026. Fixes made there should be copied here and vice
 versa. This repo differs on purpose: tasks live in one `tasks/` folder with
-the CAD program in `task.toml` rather than in per-program folders, there
+the CAD program inferred from the input file rather than from
+per-program folders, there
 are no solutions, examples or graders, and only what `tools/try_model.py`
 needs to run a model is kept.

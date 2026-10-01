@@ -118,7 +118,7 @@ FREECAD_FALLBACKS = (
 # ---------------------------------------------------------------------------
 
 def resolve_task(name: str) -> Path:
-    """`tasks/4_Sling_Lift` or `4_sling_lift` -> the real directory,
+    """`tasks/Sling_Lift` or `sling_lift` -> the real directory,
     case-insensitively."""
     wanted = Path(name.replace("\\", "/"))
     parts = [p for p in wanted.parts if p not in (".", "")]

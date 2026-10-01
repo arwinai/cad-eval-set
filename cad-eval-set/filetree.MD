@@ -1,15 +1,13 @@
 # Task directory layout
 
-Every task lives at `tasks/<num>_<task_name>/`, where `<num>` is the task's
-number on the tracking sheet. Which CAD program the task uses (`CadQuery`,
-`FreeCAD`, `SolidWorks`, `STEP`, `Blender`) is `program` in its task.toml;
-there are no per-program folders. `tasks/playstation_controller/` is a
+Every task lives at `tasks/<task_name>/`. Which CAD program the task uses
+(`CadQuery`, `FreeCAD`, `SolidWorks`, `STEP`, `Blender`) is read off the
+before model's extension; there are no per-program folders. `tasks/playstation_controller/` is a
 finished example and `tasks/template/` a blank one to copy; other task
 folders are not committed.
 
 ```
-tasks/<num>_<task_name>/
-├── task.toml            # program, name, one-line description
+tasks/<task_name>/
 ├── instruction.md       # the prompt (or a pointer to a prompt file in environment/)
 ├── environment/         # the "before": everything the solver receives
 └── _runs/               # written by tools/try_model.py, gitignored
@@ -61,6 +59,5 @@ or a failure. Nothing is graded automatically.
 3. **Skip**: "After" / "Solution" models, "Defective" / "Adversarial"
    variants, checklists and rubrics, `.swp`, `.mp4`, `.jsonl`, `~$*` lock
    files, screen recordings, click telemetry, and `.FCMacro` build steps.
-4. **task.toml**: set `program`, `name`, `description`.
-5. **Cross-check**: re-read the inventory and confirm every file landed
+4. **Cross-check**: re-read the inventory and confirm every file landed
    where its disposition said.

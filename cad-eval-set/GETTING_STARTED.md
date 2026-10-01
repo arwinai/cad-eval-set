@@ -94,15 +94,14 @@ check that the keys in `.env` work; a missing key is reported there.
 
 ## 6. Make a task
 
-A task is a folder with three things: the "before" (the SolidWorks files
-the engineer would start from), the prompt they would be given, and a
-one-line settings file.
+A task is a folder with two things: the "before" (the SolidWorks files
+the engineer would start from) and the prompt they would be given.
 There is a finished example at `tasks\playstation_controller`: a
 controller body and a prompt asking for it to be widened and made
 left-handed. You can run a model on it as-is in step 7 to see the whole
-thing work. To make your own, copy `tasks\template` to your task's
-number and a short name, for example `tasks\12_widget_bracket`, then, in
-Windows Explorer, open the copy and:
+thing work. To make your own, copy `tasks\template` to a short name
+for your task, for example `tasks\widget_bracket`, then, in Windows
+Explorer, open the copy and:
 
 1. **`environment\`**: put the "before" model here. Rename the main part
    or assembly to `input.sldprt` or `input.sldasm`. For an assembly, put
@@ -112,8 +111,6 @@ Windows Explorer, open the copy and:
    prompt, worded exactly as you would give it to another engineer. Keep
    a last line that names the result file as `/app/<name>`, for example:
    `Save the finished assembly as /app/solution.sldasm.`
-3. **`task.toml`**: open it in Notepad and replace the values in angle
-   brackets. Leave `program = "SolidWorks"`.
 
 That is the whole task: a before and a prompt. There is no answer key.
 
