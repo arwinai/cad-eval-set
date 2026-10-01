@@ -95,12 +95,22 @@ check that the keys in `.env` work; a missing key is reported there.
 
 A task is a folder with two things: the "before" (the SolidWorks files
 the engineer would start from) and the prompt they would be given.
-There is a finished example at `tasks\playstation_controller`: a
-controller body and a prompt asking for it to be widened and made
-left-handed. You can run a model on it as-is in step 7 to see the whole
-thing work. To make your own, copy `tasks\template` to a short name
-for your task, for example `tasks\widget_bracket`, then, in Windows
-Explorer, open the copy and:
+Nothing else: no answer, no checklist.
+
+**Look at the example first.** Open `tasks\playstation_controller` in
+Windows Explorer. Inside:
+
+- `environment\input.SLDPRT` is the before: a PS3 controller body.
+- `instruction.md` is the prompt. Open it in Notepad. It asks for the
+  body to be widened by 15 mm and converted to a left-handed layout, in
+  the words an engineer would use, and its last line says where to save
+  the result: `/app/solution.SLDPRT`.
+
+That is a complete task. You can run a model on it as-is in step 7 to
+see the whole thing work before making your own.
+
+**Make your own** by copying `tasks\template` to a short name for your
+task, for example `tasks\widget_bracket`. Open the copy and:
 
 1. **`environment\`**: put the "before" model here. Rename the main part
    or assembly to `input.sldprt` or `input.sldasm`. For an assembly, put
@@ -110,8 +120,6 @@ Explorer, open the copy and:
    prompt, worded exactly as you would give it to another engineer. Keep
    a last line that names the result file as `/app/<name>`, for example:
    `Save the finished assembly as /app/solution.sldasm.`
-
-That is the whole task: a before and a prompt. There is no answer key.
 
 ## 7. Run a model on it
 
