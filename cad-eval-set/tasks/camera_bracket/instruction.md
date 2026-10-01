@@ -1,0 +1,5 @@
+This bracket mounts a camera on a servo: the raised circular boss with the keyed socket at one end sits on the servo horn, and the recessed circular pocket with the centre hole at the other end takes the camera. Lengthen the flat base by 20 mm so that the camera pocket, its centre hole and its surrounding mounting holes move 20 mm further from the servo boss as one group, with their spacing unchanged. The servo-boss end must not move or change. Add two M3 clearance holes (3.4 mm through) in the new 20 mm of base, placed symmetrically about the bracket's long centreline. Add a stiffening rib of the same thickness as the base, running along the centreline on the underside between the boss end and the pocket end, stopping clear of all holes. Every existing fillet must survive the change, and the new edges of the extension must be filleted to match the adjacent edges of the original base; do not leave sharp edges where the original was rounded. The result must be one solid body.
+
+The starting part: `input.SLDPRT`.
+
+Save your final edited part as `/app/solution.SLDPRT`.

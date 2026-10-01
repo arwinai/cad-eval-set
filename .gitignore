@@ -17,7 +17,7 @@ _runs/
 
 # Tasks live on the machine that made them. Only the blank example is in git.
 cad-eval-set/tasks/*
-!cad-eval-set/tasks/playstation_controller/
+!cad-eval-set/tasks/camera_bracket/
 
 # CAD scratch and lock files.
 *.FCBak

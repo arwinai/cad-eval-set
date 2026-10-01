@@ -89,7 +89,7 @@ C:\Dev\cad-eval-set\          <- outer folder
     ├── tools\
     │   └── try_model.py
     └── tasks\
-        ├── playstation_controller\
+        ├── camera_bracket\
         └── template\
 ```
 
@@ -120,10 +120,12 @@ A task is a folder with two things: the "before" (the SolidWorks files
 the engineer would start from) and the prompt they would be given.
 Nothing else: no answer, no defective examples, no checklist.
 
-**Look at the example first.** Open `tasks\playstation_controller` in
-Windows Explorer. Inside:
+**Look at the example first.** Open `tasks\camera_bracket` in Windows
+Explorer. Inside:
 
-- `environment\input.SLDPRT` is the before: a PS3 controller body.
+- `environment\input.SLDPRT` is the before: a servo-mounted camera
+  bracket. It was saved in SolidWorks 2010, so any SolidWorks from the
+  last decade opens it.
 - `instruction.md` is the prompt.
 
 That is a complete task. You can run a model on it as-is in step 7 to
@@ -149,7 +151,7 @@ through its API, so it has to be running. Then:
 ```powershell
 cd C:\Dev\cad-eval-set\cad-eval-set
 .venv\Scripts\activate
-python tools\try_model.py claude tasks\playstation_controller
+python tools\try_model.py claude tasks\camera_bracket
 ```
 
 The model reads your prompt, gets a working folder with your input files,
@@ -160,9 +162,9 @@ yourself while it runs.
 To try a different model, change the first word:
 
 ```powershell
-python tools\try_model.py gpt tasks\playstation_controller
-python tools\try_model.py claude:opus5.5 tasks\playstation_controller
-python tools\try_model.py gemini:flash3.8 tasks\playstation_controller
+python tools\try_model.py gpt tasks\camera_bracket
+python tools\try_model.py claude:opus5.5 tasks\camera_bracket
+python tools\try_model.py gemini:flash3.8 tasks\camera_bracket
 ```
 
 `claude` on its own is Claude Fable 5.1 and `gpt` is GPT-6 Astra.
