@@ -73,8 +73,24 @@ cd cad-eval-set
 ## 4. Add your keys
 
 You were given a `.env` file with the keys in it. Put it in
-`C:\Dev\cad-eval-set` (the outer folder), named exactly `.env`. To check
-or edit it:
+`C:\Dev\cad-eval-set` (the outer folder), named exactly `.env`. There
+are two folders called `cad-eval-set`, one inside the other; the `.env`
+goes in the outer one, next to this README:
+
+```
+C:\Dev\cad-eval-set\          <- outer folder
+├── .env                      <- put it here
+├── README.md
+└── cad-eval-set\             <- inner folder (the tools and tasks)
+    ├── env_requirements.txt
+    ├── tools\
+    │   └── try_model.py
+    └── tasks\
+        ├── playstation_controller\
+        └── template\
+```
+
+To check or edit it:
 
 ```powershell
 notepad .env
