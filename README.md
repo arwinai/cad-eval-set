@@ -6,118 +6,252 @@ it, open the "after" it produced, and decide by eye whether it is good
 enough or a failure. There are no reference solutions, adversarial
 examples or automatic graders here.
 
-New to the terminal, or coming from SolidWorks rather than code? Read
-[GETTING_STARTED.md](cad-eval-set/GETTING_STARTED.md) first; it walks through every
-step on Windows.
+**Why this exists.** Recent tasks have been getting too easy: the
+frontier models solve most of them cleanly on the first try, and a task
+like that tells us nothing. So before anyone builds a full task, the
+prompt gets tried on a model first, and only tasks a strong model
+struggles with go further.
 
-## Setup
+This guide takes you from nothing to running an AI model on a task you
+made, on a Windows PC with SolidWorks. You do not need to know how to
+program. You will type a handful of commands into a terminal; each one is
+written out in full, and you can copy and paste them.
 
-```bash
-# put the .env you were given at the git root, one level above this folder
-pip install -r env_requirements.txt   # the model SDKs and agent tooling
-```
+If anything here does not match what you see on screen, stop and ask.
+That is a problem with the guide, not with you.
 
-`.env` lives at the git root, one level above this folder. FreeCAD tasks
-also need `FREECAD_CMD` pointing at a `freecadcmd` binary; SolidWorks
-tasks need Windows with SolidWorks running.
+## 1. What you are setting up
 
-CadQuery, FreeCAD, STEP and Blender tasks run the model inside a Docker
-container so every run has the same toolchain. SolidWorks tasks run on
-the host, since SolidWorks cannot be containerised, and do not need
-Docker at all.
+- **The repo.** A folder of files, shared through GitHub, that holds the
+  tools and the tasks. "Cloning" it means downloading a copy.
+- **Python.** The language the tools are written in. You install it once.
+- **A terminal.** A window where you type commands. On Windows, use
+  **PowerShell** (press the Windows key, type `powershell`, press Enter).
+- **A `.env` file.** A small text file with the keys the AI models need.
+  You will be given the values; never share them or put them in a task.
 
-Install Docker Desktop once:
+## 2. Install the three programs (once)
+
+Open PowerShell and paste these one at a time. Each one downloads and
+installs a program; say yes to any prompt.
 
 ```powershell
-winget install --id Docker.DockerDesktop -e      # Windows
+winget install --id Git.Git -e
+winget install --id Python.Python.3.11 -e
+winget install --id GitHub.cli -e
 ```
 
-```bash
-brew install --cask docker && open -a Docker     # macOS
+Close PowerShell and open it again so it picks up the new programs. Check
+they worked:
+
+```powershell
+git --version
+python --version
 ```
 
-On Windows, start Docker Desktop from the Start menu, accept the service
-agreement, and wait for the whale icon in the tray to stop animating. It
-may ask for a reboot the first time to enable WSL 2. Afterwards it starts
-with Windows. Check it is running with:
+Each should print a version number. If `python --version` opens the
+Microsoft Store instead, run this and try again:
 
-```bash
+```powershell
+winget install --id Python.Python.3.11 -e --override "/passive PrependPath=1"
+```
+
+**Docker, only for non-SolidWorks tasks.** SolidWorks tasks run on your
+own machine, because SolidWorks cannot run in a container, so skip this
+if that is all you will make. CadQuery, FreeCAD, STEP and Blender tasks
+run the model inside a Docker container instead, so every run has the
+same toolchain. Install Docker Desktop once:
+
+```powershell
+winget install --id Docker.DockerDesktop -e
+```
+
+Start Docker Desktop from the Start menu, accept the service agreement,
+and wait for the whale icon in the tray to stop animating. It may ask for
+a reboot the first time to enable WSL 2. Afterwards it starts with
+Windows. Check it is running with:
+
+```powershell
 docker info
 ```
 
-The first run for each program builds its image from `common/docker/`,
-which takes a few minutes. Without Docker, `--allow-host` runs any task
-on this machine instead.
+The first run for each program builds its image (a few minutes); you do
+not build anything by hand. On macOS: `brew install --cask docker` and
+open the Docker app.
 
-## Adding a task
+## 3. Download the repo
 
-`tasks/playstation_controller/` is a finished example: a SolidWorks
-controller body as the before, and a prompt asking for it to be widened
-and converted to a left-handed layout. `tasks/template/` is the same
-shape with the contents blanked out. Copy the template to
-`tasks/<slug>/` and fill it in. Other task folders are not committed;
-they live on your machine. The CAD program (`CadQuery`, `FreeCAD`,
-`SolidWorks`, `STEP`, `Blender`) is read off the before model's
-extension and picks the container the model runs in. Inside, fill in:
+Pick where you want it. `C:\Dev` is a good choice. Then:
 
-| Path | What goes there |
-|---|---|
-| `environment/` | The "before" files the solver receives, main model renamed `input.<ext>`. Nothing else. |
-| `instruction.md` | The prompt, verbatim. It must name the deliverable as `/app/<name>`. |
-
-That is the whole task. [filetree.MD](cad-eval-set/filetree.MD) is the full layout
-spec, including how to bring a task in from a Drive folder.
-
-## Trying a model on it
-
-```bash
-python3 tools/try_model.py claude tasks/playstation_controller
-python3 tools/try_model.py gpt playstation_controller
-python3 tools/try_model.py gpt:astra playstation_controller
-python3 tools/try_model.py claude:fable51 tasks/playstation_controller --max-turns 200
+```powershell
+mkdir C:\Dev
+cd C:\Dev
+gh auth login
+git clone https://github.com/arwinai/cad-eval-set.git cad-eval-set
+cd cad-eval-set
 ```
 
-The model is `route[:variant]`: `claude[:sonnet5|opus55|fable51]`,
-`gpt[:gpt56|astra]` (astra is GPT-6),
-`gemini[:pro|flash]`, `grok`, `kimi`, `deepseek`, `glm`. The model gets a
-real workspace with the task's inputs, a shell and the machine's CAD
-toolchain, and works until it writes the deliverable or runs out of turns.
+`gh auth login` asks you to sign in to GitHub in your browser the first
+time; the repo is private, so the clone needs it.
 
-The example is a SolidWorks task, so it needs Windows with SolidWorks
-running. Everything lands in `<task>/_runs/<model>_<timestamp>/`, gitignored:
+You now have `C:\Dev\cad-eval-set`. Inside it is another folder also
+called `cad-eval-set`; that inner one is where the tools live. The outer
+one is where your keys go.
 
-- `after/`: the file the prompt asked for, plus any parts that go with it
-- `workspace/`: the model's scratch files
-- `prompt.txt`, `raw_response.md`, `transcript.json`: what was sent, what
-  the model said, and every command it ran
-- `report.md`: turns, time, and whether it produced the file at all
+## 4. Add your keys
 
-Open `after/` and judge it as you would a colleague's work. Nothing is
-scored.
+You were given a `.env` file with the keys in it. Put it in
+`C:\Dev\cad-eval-set` (the outer folder), named exactly `.env`. To check
+or edit it:
 
-## Deciding
+```powershell
+notepad .env
+```
 
-A task is interesting when a strong model fails it on the engineering,
-not on the tooling. Rough guide:
+Each key is a line of the form `NAME=value`. The two that matter most
+for trying models are `AZURE_API_KEY` and `AZURE_API_KEY_GTM_RESEARCH`.
+Leave `FREECAD_CMD` empty unless you have FreeCAD. Save and close Notepad.
 
-- **Solved cleanly on the first try**: too easy as written. Tighten the
-  prompt or the constraints before spending time on an "after".
-- **Failed because it could not open the file, find the tool, or ran out
-  of turns**: an environment problem. Fix `environment/` or the prompt and
-  run again; this says nothing about difficulty yet.
-- **Produced something plausible that an engineer would reject**: the good
-  case. Note what it got wrong.
-- **Different models fail in different ways**: also good. Run two or three
+If Windows Explorer hides file extensions, the copy may be called
+`.env.txt` without you seeing it. Check the name in PowerShell with `dir`.
+
+## 5. Install the Python packages (once)
+
+```powershell
+cd C:\Dev\cad-eval-set\cad-eval-set
+pip install -r env_requirements.txt
+```
+
+This takes a few minutes and prints a lot. It is fine as long as it ends
+without the word `ERROR` in red. The first run in step 7 is also the
+check that the keys in `.env` work; a missing key is reported there.
+
+## 6. Make a task
+
+A task is a folder with two things: the "before" (the SolidWorks files
+the engineer would start from) and the prompt they would be given.
+Nothing else: no answer, no checklist.
+
+**Look at the example first.** Open `tasks\playstation_controller` in
+Windows Explorer. Inside:
+
+- `environment\input.SLDPRT` is the before: a PS3 controller body.
+- `instruction.md` is the prompt. Open it in Notepad. It asks for the
+  body to be widened by 15 mm and converted to a left-handed layout, in
+  the words an engineer would use, and its last line says where to save
+  the result: `/app/solution.SLDPRT`.
+
+That is a complete task. You can run a model on it as-is in step 7 to
+see the whole thing work before making your own.
+
+**Make your own** by copying `tasks\template` to a short name for your
+task, for example `tasks\widget_bracket`. Open the copy and:
+
+1. **`environment\`**: put the "before" model here. Rename the main part
+   or assembly to `input.sldprt` or `input.sldasm`. For an assembly, put
+   its parts here too, with their real names. Nothing else goes in this
+   folder.
+2. **`instruction.md`**: open it in Notepad and replace the text with your
+   prompt, worded exactly as you would give it to another engineer. Keep
+   a last line that names the result file as `/app/<name>`, for example:
+   `Save the finished assembly as /app/solution.sldasm.`
+
+## 7. Run a model on it
+
+Start SolidWorks and leave it open. The model drives your SolidWorks
+through its API, so it has to be running. Then:
+
+```powershell
+cd C:\Dev\cad-eval-set\cad-eval-set
+python tools\try_model.py claude tasks\playstation_controller
+```
+
+The model reads your prompt, gets a working folder with your input files,
+and starts working. You will see each step it takes scroll past. This can
+take anywhere from a few minutes to over an hour. Do not use SolidWorks
+yourself while it runs.
+
+To try a different model, change the first word:
+
+```powershell
+python tools\try_model.py gpt tasks\playstation_controller
+python tools\try_model.py gpt:astra tasks\playstation_controller
+python tools\try_model.py claude:fable51 tasks\playstation_controller
+```
+
+You may see a warning that the run is "on the HOST". For a SolidWorks
+task that is expected: SolidWorks cannot run in a container.
+
+## 8. Look at what it did
+
+Inside your task folder a new folder `_runs` appears, with one subfolder
+per run named after the model and the time. Open the newest one. In it:
+
+- **`after\`**: what it built, the file your prompt asked for plus any
+  parts that go with it. Open it in SolidWorks and judge it as you would
+  a colleague's work: good enough, or a failure.
+- **`raw_response.md`**: what the model said it did, in its own words.
+- **`transcript.json`**: every command it ran, if you want to see how it
+  got there.
+- **`report.md`**: how long it took, how many steps, and whether it
+  produced the file at all.
+
+## 9. Decide
+
+The question is: **did it fail on the engineering, or on the tooling?**
+
+- **It built the right thing on the first try.** The task is too easy as
+  written. Make the prompt or the constraints harder and run again.
+- **It could not open the file, got stuck, or ran out of turns without
+  saving anything.** That is a setup problem, not a hard task. Check the
+  input files and the prompt and run again.
+- **It built something plausible that you would send back.** This is the
+  good outcome. Write down what is wrong with it.
+- **Two models fail in different ways.** Also good. Run two or three
   before deciding.
 
-Record the verdict for each run, good enough or failure and why, on the
-tracking sheet.
+Record the verdict for each run on the tracking sheet: good enough, or a
+failure, and why.
 
-## Layout
+## Things that go wrong
+
+**`python` is not recognised.** Python did not get added to your PATH.
+Re-run the install line at the end of step 2, then close and reopen
+PowerShell.
+
+**`no Azure credential`** or **`key is missing`.** The `.env` file is in
+the wrong place or has the wrong name. It must be
+`C:\Dev\cad-eval-set\.env`, in the outer folder, with no `.txt` ending.
+
+**`no task matching`.** The task folder is not under `tasks\`, or the
+name is misspelled. The name is matched case-insensitively.
+
+**The model says SolidWorks is not running.** Start SolidWorks, then run
+again. If SolidWorks is open and it still says so, close SolidWorks
+fully (check Task Manager for `SLDWORKS.exe`) and start it again.
+
+**Something else.** Copy the last twenty lines from the terminal and send
+them to the group chat, or ask Claude.
+
+## Reference
+
+**Models.** The first word of the run command is `route[:variant]`:
+`claude[:sonnet5|opus55|fable51]`, `gpt[:gpt56|astra]` (astra is GPT-6),
+`gemini[:pro|flash]`, `grok`, `kimi`, `deepseek`, `glm`. Add
+`--max-turns 200` to cap how many tool calls the model gets.
+
+**Task layout.** A task is a folder under `tasks/` holding `environment/`
+(the before, with the main model renamed `input.<ext>`; for an assembly,
+its parts beside it with their real names) and `instruction.md` (the
+prompt, ending with a line that names the result as `/app/<name>`). The
+CAD program is read off the input file's extension. Only
+`playstation_controller/` and `template/` are committed; your own task
+folders stay on your machine.
+
+**Repo layout.**
 
 ```
 cad-eval-set/
-├── filetree.MD, GETTING_STARTED.md, CLAUDE.md
 ├── env_requirements.txt
 ├── common/                  # model routes and the agent's sandbox
 │   ├── call_claude.py, call_gpt.py, call_gemini.py, ...
@@ -126,17 +260,14 @@ cad-eval-set/
 │   └── docker/              #   base images per CAD program
 ├── tools/
 │   └── try_model.py         #   run one model on one task, keep its after/
-└── tasks/                   # tasks go here, one folder each (not committed)
+└── tasks/
     ├── playstation_controller/   # a finished example
     └── template/                 # copy this to start a task
 ```
 
-## Relationship to openai-eval-set
-
-`common/` and `tools/` are copies of the same files in openai-eval-set as
-of 30 September 2026. Fixes made there should be copied here and vice
-versa. This repo differs on purpose: tasks live in one `tasks/` folder with
-the CAD program inferred from the input file rather than from
-per-program folders, there
-are no solutions, examples or graders, and only what `tools/try_model.py`
-needs to run a model is kept.
+**Relationship to openai-eval-set.** `common/` and `tools/` are copies of
+the same files in openai-eval-set as of 30 September 2026. Fixes made
+there should be copied here and vice versa. This repo differs on
+purpose: tasks live in one `tasks/` folder with the CAD program inferred
+from the input file, there are no solutions, examples or graders, and
+only what `tools/try_model.py` needs to run a model is kept.
