@@ -7,7 +7,7 @@ enough or a failure. There are no reference solutions, adversarial
 examples or automatic graders here.
 
 New to the terminal, or coming from SolidWorks rather than code? Read
-[GETTING_STARTED.md](GETTING_STARTED.md) first; it walks through every
+[GETTING_STARTED.md](cad-eval-set/GETTING_STARTED.md) first; it walks through every
 step on Windows.
 
 ## Setup
@@ -49,7 +49,7 @@ container the model runs in. Inside, fill in:
 | `instruction.md` | The prompt, verbatim. It must name the deliverable as `/app/<name>`. |
 | `task.toml` | `program`, a name and a one-line description. |
 
-That is the whole task. [filetree.MD](filetree.MD) is the full layout
+That is the whole task. [filetree.MD](cad-eval-set/filetree.MD) is the full layout
 spec, including how to bring a task in from a Drive folder. The "before"
 CAD files are committed with the task; nothing else holds them.
 
