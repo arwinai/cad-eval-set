@@ -22,11 +22,32 @@ also need `FREECAD_CMD` pointing at a `freecadcmd` binary; SolidWorks
 tasks need Windows with SolidWorks running.
 
 CadQuery, FreeCAD, STEP and Blender tasks run the model inside a Docker
-container so every run has the same toolchain. Install Docker Desktop and
-have it running; the first run for each program builds its image from
-`common/docker/` (a few minutes). SolidWorks tasks run on the host, since
-SolidWorks cannot be containerised. Without Docker, `--allow-host` runs
-any task on this machine instead.
+container so every run has the same toolchain. SolidWorks tasks run on
+the host, since SolidWorks cannot be containerised, and do not need
+Docker at all.
+
+Install Docker Desktop once:
+
+```powershell
+winget install --id Docker.DockerDesktop -e      # Windows
+```
+
+```bash
+brew install --cask docker && open -a Docker     # macOS
+```
+
+On Windows, start Docker Desktop from the Start menu, accept the service
+agreement, and wait for the whale icon in the tray to stop animating. It
+may ask for a reboot the first time to enable WSL 2. Afterwards it starts
+with Windows. Check it is running with:
+
+```bash
+docker info
+```
+
+The first run for each program builds its image from `common/docker/`,
+which takes a few minutes. Without Docker, `--allow-host` runs any task
+on this machine instead.
 
 ## Adding a task
 
