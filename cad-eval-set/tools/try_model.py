@@ -66,7 +66,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-# The toolchain paths (FREECAD_CMD, SW_SCRIPT_RUNNER_EXE) live in .env
+# The toolchain paths (FREECAD_CMD) live in .env
 # beside the checkout, and discover_toolchain() reads them from the
 # environment -- so load it here rather than relying on whichever
 # call_* module happens to be imported first.
@@ -750,9 +750,6 @@ def discover_toolchain() -> dict:
             f"{configured!r} is set but is not a file "
             f"(use forward slashes in .env)")
 
-    sw = os.environ.get("SW_SCRIPT_RUNNER_EXE")
-    if sw and Path(sw).is_file():
-        found["solidworks_scriptrunner"] = sw
     try:
         from common import solidworks_session as _sws
         if getattr(_sws, "_IMPORT_ERROR", None) is None:
@@ -872,14 +869,6 @@ def toolchain_brief(tools: dict, deliverable: str, task_dir: Path) -> str:
             "and a licence held, the call blocks and never returns -- an "
             "earlier run sat on exactly that for 286 minutes. Attach to the "
             "existing session (GetActiveObject / the helpers above).",
-        ]
-    if tools.get("solidworks_scriptrunner"):
-        lines += [
-            f"- SolidWorks ScriptRunner -> "
-            f"`{tools['solidworks_scriptrunner']}` (runs C# snippets)",
-            "  Same rule: its script must attach to the running SolidWorks, "
-            "not construct one. Prefer the Python COM route above unless you "
-            "need a C#-only API.",
         ]
     env = task_dir / "environment"
     pdfs = sorted(p.name for p in env.glob("*.pdf")) if env.is_dir() else []
