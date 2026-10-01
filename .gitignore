@@ -25,3 +25,4 @@ cad-eval-set/tasks/*
 *.blend1
 ~$*.SLDPRT
 ~$*.SLDASM
+!cad-eval-set/tasks/2_template/

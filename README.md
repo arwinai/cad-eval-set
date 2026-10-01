@@ -36,10 +36,11 @@ Without Docker, `--allow-host` runs the model on this machine instead.
 
 `tasks/1_playstation_controller/` is a finished example: a SolidWorks
 controller body as the before, and a prompt asking for it to be widened
-and converted to a left-handed layout. Copy it to `tasks/<n>_<slug>/`,
-where `n` is your task's number on the tracking sheet, and replace its
-contents. Task folders other than the example are not committed; they
-live on your machine. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
+and converted to a left-handed layout. `tasks/2_template/` is the same
+shape with the contents blanked out. Copy the template to
+`tasks/<n>_<slug>/`, where `n` is your task's number on the tracking
+sheet, and fill it in. Other task folders are not committed; they live
+on your machine. The CAD program (`CadQuery`, `FreeCAD`, `SolidWorks`,
 `STEP`, `Blender`) is `program` in the task's `task.toml`; it picks the
 container the model runs in. Inside, fill in:
 
@@ -109,7 +110,8 @@ cad-eval-set/
 ├── tools/
 │   └── try_model.py         #   run one model on one task, keep its after/
 └── tasks/                   # tasks go here, one folder each (not committed)
-    └── 1_playstation_controller/   # the example: copy it to start a task
+    ├── 1_playstation_controller/   # a finished example
+    └── 2_template/                 # copy this to start a task
 ```
 
 ## Relationship to openai-eval-set

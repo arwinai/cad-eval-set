@@ -1,0 +1,9 @@
+# Which CAD program the task uses. tools/try_model.py reads this to pick
+# the container image (CadQuery | FreeCAD | STEP | Blender) or, for
+# SolidWorks, the Windows sandbox account.
+program = "SolidWorks"
+
+[task]
+name = "<short_name>"
+description = "<one sentence: what the solver has to do>"
+author = "<your name>"

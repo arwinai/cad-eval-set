@@ -100,9 +100,9 @@ one-line settings file.
 There is a finished example at `tasks\1_playstation_controller`: a
 controller body and a prompt asking for it to be widened and made
 left-handed. You can run a model on it as-is in step 7 to see the whole
-thing work. To make your own, copy that folder to your task's number and
-a short name, for example `tasks\12_widget_bracket`, then, in Windows
-Explorer, open the copy and:
+thing work. To make your own, copy `tasks\2_template` to your task's
+number and a short name, for example `tasks\12_widget_bracket`, then, in
+Windows Explorer, open the copy and:
 
 1. **`environment\`**: put the "before" model here. Rename the main part
    or assembly to `input.sldprt` or `input.sldasm`. For an assembly, put
@@ -112,8 +112,8 @@ Explorer, open the copy and:
    prompt, worded exactly as you would give it to another engineer. Keep
    a last line that names the result file as `/app/<name>`, for example:
    `Save the finished assembly as /app/solution.sldasm.`
-3. **`task.toml`**: open it in Notepad and replace the name and
-   description. Leave `program = "SolidWorks"`.
+3. **`task.toml`**: open it in Notepad and replace the values in angle
+   brackets. Leave `program = "SolidWorks"`.
 
 That is the whole task: a before and a prompt. There is no answer key.
 
