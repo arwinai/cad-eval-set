@@ -17,7 +17,7 @@ written out in full, and you can copy and paste them.
 - **A `.env` file.** A small text file with the keys the AI models need.
   You will be given the values; never share them or put them in a task.
 
-## 2. Install the three programs (once)
+## 2. Install the four programs (once)
 
 Open PowerShell and paste these one at a time. Each one downloads and
 installs a program; say yes to any prompt.
@@ -26,14 +26,17 @@ installs a program; say yes to any prompt.
 winget install --id Git.Git -e
 winget install --id Python.Python.3.11 -e
 winget install --id GitHub.cli -e
+winget install --id Anthropic.ClaudeCode -e
 ```
 
-Close PowerShell and open it again so it picks up the new programs. Check
-they worked:
+The last one is Claude Code, the program the tool drives to run the
+Claude models. Close PowerShell and open it again so it picks up the new
+programs. Check they worked:
 
 ```powershell
 git --version
 python --version
+claude --version
 ```
 
 Each should print a version number. If `python --version` opens the
@@ -187,6 +190,14 @@ PowerShell.
 **`no Azure credential`** or **`key is missing`.** The `.env` file is in
 the wrong place or has the wrong name. It must be
 `C:\Dev\cad-eval-set\.env`, in the outer folder, with no `.txt` ending.
+
+**`'--effort <level>' argument 'xhigh' is invalid`.** Claude Code is
+missing or out of date, so the tool fell back to an old copy. Install or
+update it, then close and reopen PowerShell:
+
+```powershell
+winget install --id Anthropic.ClaudeCode -e
+```
 
 **The model says SolidWorks is not running.** Start SolidWorks, then run
 again. If SolidWorks is open and it still says so, close SolidWorks
