@@ -24,13 +24,13 @@ requests
 anthropic==1.6.0
 claude-agent-sdk==0.1.53
 mcp<2
-# GPT route (common/call_gpt.py); it also loads point-cloud inputs.
+# GPT route (common/call_gpt.py), and the grok / kimi / deepseek / glm
+# routes, which talk to their Azure deployments through the same SDK.
 openai==1.100.2
-numpy==2.2.6
-trimesh==4.7.1
 # Gemini route (common/call_gemini.py), via the google-genai SDK.
 google-genai==2.23.0
-# Inline image inputs (common/workspace_mcp.py).
+# Optional: downscales images the agent views (common/workspace_mcp.py);
+# without it they are sent full size.
 pillow==12.3.0
 
 # --- Windows only: SolidWorks -----------------------------------------
