@@ -1,0 +1,37 @@
+# What tools/try_model.py and the model routes in common/ need. The CAD
+# toolchain itself lives in the Docker base images (common/docker/), not
+# here.
+#
+# Not pip-installable:
+#   * FreeCAD 1.1 (only for --allow-host runs); set `FREECAD_CMD` to its
+#       `freecadcmd` binary
+#   * The SolidWorks COM API: a licensed SolidWorks install on Windows,
+#       driven through pywin32
+#   * Gemini CLI (`npm install -g @google/gemini-cli`, needs Node): the
+#       gemini:* routes drive it; or set GEMINI_CLI (0.61.0 known good)
+#   * Kimi Code CLI: the grok, kimi, deepseek and glm routes drive it,
+#       expected at ~/.kimi-code/bin/kimi.exe; or set KIMI_CODE_CLI.
+#       Windows: `irm https://code.kimi.com/kimi-code/install.ps1 | iex`,
+#       macOS/Linux: `curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash`
+#       (2.1.1 known good)
+
+python-dotenv==1.1.0
+requests
+# Claude route (common/call_claude.py): drives Claude Code and serves the
+# agent's workspace shell through claude_agent_sdk.create_sdk_mcp_server.
+# 0.1.53 registers that server with `@server.list_tools()`, which mcp 2.x
+# removed -- with mcp 2 every run dies at startup.
+anthropic==1.6.0
+claude-agent-sdk==0.1.53
+mcp<2
+# GPT route (common/call_gpt.py); it also loads point-cloud inputs.
+openai==1.100.2
+numpy==2.2.6
+trimesh==4.7.1
+# Gemini route (common/call_gemini.py), via the google-genai SDK.
+google-genai==2.23.0
+# Inline image inputs (common/workspace_mcp.py).
+pillow==12.3.0
+
+# --- Windows only: SolidWorks -----------------------------------------
+pywin32==306; sys_platform == "win32"

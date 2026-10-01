@@ -1,0 +1,24 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Secrets and local tooling
+.env
+.gcp_service_account.json
+gen-lang-client-*.json
+.claude/
+.DS_Store
+
+# Per-task output from tools/try_model.py (prompt sent, answer, after/,
+# scratch). Regenerated on demand.
+_runs/
+
+# CAD scratch and lock files. The "before" models under tasks/ are
+# committed; nothing else holds them.
+*.FCBak
+*.fcbak
+*.blend1
+~$*.SLDPRT
+~$*.SLDASM
