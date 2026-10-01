@@ -21,16 +21,12 @@ pip install -r env_requirements.txt   # the model SDKs and agent tooling
 also need `FREECAD_CMD` pointing at a `freecadcmd` binary; SolidWorks
 tasks need Windows with SolidWorks running.
 
-Runs default to the Docker container for the task's CAD program so every
-run has the same toolchain. Build the base image once from this folder:
-
-```bash
-docker build -f common/docker/step-base.Dockerfile     -t step-base:latest .
-docker build -f common/docker/cadquery-base.Dockerfile -t cadquery-base:latest .
-docker build -f common/docker/freecad-base.Dockerfile  -t freecad-base:latest .
-```
-
-Without Docker, `--allow-host` runs the model on this machine instead.
+CadQuery, FreeCAD, STEP and Blender tasks run the model inside a Docker
+container so every run has the same toolchain. Install Docker Desktop and
+have it running; the first run for each program builds its image from
+`common/docker/` (a few minutes). SolidWorks tasks run on the host, since
+SolidWorks cannot be containerised. Without Docker, `--allow-host` runs
+any task on this machine instead.
 
 ## Adding a task
 

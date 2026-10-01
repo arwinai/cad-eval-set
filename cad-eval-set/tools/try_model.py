@@ -483,6 +483,32 @@ def image_present(image: str) -> bool:
     return rc == 0 and bool(out.strip())
 
 
+#: A base image build downloads a CAD toolchain (FreeCAD, Blender, the
+#: CadQuery wheels): minutes on a good connection, longer on a bad one.
+IMAGE_BUILD_TIMEOUT_S = 3600
+
+
+def build_image(image: str, program: str) -> bool:
+    """Build the base image for `program` from common/docker/, streaming
+    docker's output so a long build does not look like a hang."""
+    import subprocess
+    dockerfile = ROOT / "common" / "docker" / f"{program.lower()}-base.Dockerfile"
+    if not dockerfile.is_file():
+        print(f"  no Dockerfile for {program}: expected {dockerfile}")
+        return False
+    print(f"image     : {image} is missing -- building it from "
+          f"{dockerfile.relative_to(ROOT).as_posix()} (first run only; "
+          "this takes a few minutes)")
+    try:
+        rc = subprocess.call(["docker", "build", "-f", str(dockerfile),
+                              "-t", image, str(ROOT)],
+                             cwd=str(ROOT), timeout=IMAGE_BUILD_TIMEOUT_S)
+    except subprocess.TimeoutExpired:
+        print(f"  build timed out after {IMAGE_BUILD_TIMEOUT_S}s")
+        return False
+    return rc == 0 and image_present(image)
+
+
 class DockerBackend:
     """The agent's shell runs inside the image for the task's CAD program.
 
@@ -666,10 +692,10 @@ def choose_backend(task_dir: Path, workspace: Path, run_id: str,
             problem = ("docker is not running -- the agent's shell would be "
                        "on the HOST, with this machine's toolchain and "
                        "this checkout in reach.")
-        elif not image_present(image):
-            problem = (f"image {image} is missing -- build it with "
-                       f"`docker build -f common/docker/"
-                       f"{family.lower()}-base.Dockerfile -t {image} .`; "
+        elif not image_present(image) and not build_image(image, family):
+            problem = (f"image {image} is missing and could not be built "
+                       f"(see docker's output above; the Dockerfile is "
+                       f"common/docker/{family.lower()}-base.Dockerfile); "
                        "without it the agent's shell would be on the HOST.")
         if problem:
             if not allow_host:
