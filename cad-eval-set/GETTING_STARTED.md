@@ -191,12 +191,9 @@ the wrong place or has the wrong name. It must be
 **`no task matching`.** The task folder is not under `tasks\`, or the
 name is misspelled. The name is matched case-insensitively.
 
-**`cannot tell what ... wants written`.** The last line of
-`instruction.md` does not name the result as `/app/<something>`.
-
 **The model says SolidWorks is not running.** Start SolidWorks, then run
 again. If SolidWorks is open and it still says so, close SolidWorks
 fully (check Task Manager for `SLDWORKS.exe`) and start it again.
 
 **Something else.** Copy the last twenty lines from the terminal and send
-them along with the task name.
+them to the group chat, or ask Claude.
