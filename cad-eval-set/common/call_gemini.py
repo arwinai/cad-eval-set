@@ -59,15 +59,15 @@ dotenv.load_dotenv(REPO_ROOT / ".env")
 dotenv.load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 MODELS = {
-    "pro": os.getenv("GEMINI_MODEL_PRO", "gemini-3.1-pro-preview"),
-    "flash": os.getenv("GEMINI_MODEL_FLASH", "gemini-3.8-flash"),
+    "pro3.1": os.getenv("GEMINI_MODEL_PRO", "gemini-3.1-pro-preview"),
+    "flash3.8": os.getenv("GEMINI_MODEL_FLASH", "gemini-3.8-flash"),
 }
 
-DEFAULT_MODEL = os.getenv("GEMINI_DEFAULT_MODEL", "pro")
+DEFAULT_MODEL = os.getenv("GEMINI_DEFAULT_MODEL", "pro3.1")
 
 DISPLAY_NAMES = {
-    "pro": "Gemini 3.1 Pro (Deep Think)",
-    "flash": "Gemini 3.8 Flash",
+    "pro3.1": "Gemini 3.1 Pro (Deep Think)",
+    "flash3.8": "Gemini 3.8 Flash",
 }
 
 # Pro is the careful route, so it runs at the top of the thinking ladder and
@@ -76,10 +76,10 @@ DISPLAY_NAMES = {
 # as the ladder allows; raising it would spend Pro money on a Flash call and
 # defeat the point of having two routes.
 THINKING_LEVEL = {
-    "pro": types.ThinkingLevel.HIGH,
-    "flash": types.ThinkingLevel.HIGH,
+    "pro3.1": types.ThinkingLevel.HIGH,
+    "flash3.8": types.ThinkingLevel.HIGH,
 }
-INCLUDE_THOUGHTS = {"pro": True, "flash": False}
+INCLUDE_THOUGHTS = {"pro3.1": True, "flash3.8": False}
 
 DEFAULT_MAX_OUTPUT_TOKENS = int(os.getenv("GEMINI_MAX_OUTPUT_TOKENS", "32768"))
 
@@ -97,7 +97,7 @@ _TEXT_SUFFIXES = {".py", ".txt", ".md", ".json", ".toml", ".csv", ".step",
 
 
 def resolve_model(model: str = DEFAULT_MODEL) -> str:
-    """'pro'/'flash' -> the id actually sent. A full id passes through, so a
+    """'pro3.1'/'flash3.8' -> the id actually sent. A full id passes through, so a
     caller can name a model this module has never heard of."""
     return MODELS.get(model, model)
 

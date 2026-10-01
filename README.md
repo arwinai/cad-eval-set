@@ -112,20 +112,13 @@ python -m venv .venv
 pip install -r env_requirements.txt
 ```
 
-The prompt now starts with `(.venv)`. **Every time you open a new
-PowerShell to use the tools**, run the first two lines again (`cd` and
-`.venv\Scripts\activate`) first. If `activate` is refused with a message
-about running scripts, run this once and try again:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
+The prompt now starts with `(.venv)`.
 
 ## 6. Make a task
 
 A task is a folder with two things: the "before" (the SolidWorks files
 the engineer would start from) and the prompt they would be given.
-Nothing else: no answer, no checklist.
+Nothing else: no answer, no defective examples, no checklist.
 
 **Look at the example first.** Open `tasks\playstation_controller` in
 Windows Explorer. Inside:
@@ -168,7 +161,8 @@ To try a different model, change the first word:
 
 ```powershell
 python tools\try_model.py gpt tasks\playstation_controller
-python tools\try_model.py claude:opus55 tasks\playstation_controller
+python tools\try_model.py claude:opus5.5 tasks\playstation_controller
+python tools\try_model.py gemini:flash3.8 tasks\playstation_controller
 ```
 
 `claude` on its own is Claude Fable 5.1 and `gpt` is GPT-6 Astra.

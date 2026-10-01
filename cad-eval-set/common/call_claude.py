@@ -94,18 +94,18 @@ dotenv.load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 #: likely label them differently.
 MODELS = {
     "sonnet5": os.getenv("CLAUDE_MODEL_SONNET5", "claude-sonnet-5"),
-    "fable51": os.getenv("CLAUDE_MODEL_FABLE51", "claude-fable-5-1"),
-    "opus55": os.getenv("CLAUDE_MODEL_OPUS55", "claude-opus-5-5"),
+    "fable5.1": os.getenv("CLAUDE_MODEL_FABLE51", "claude-fable-5-1"),
+    "opus5.5": os.getenv("CLAUDE_MODEL_OPUS55", "claude-opus-5-5"),
 }
 
-DEFAULT_MODEL = os.getenv("CLAUDE_DEFAULT_MODEL", "fable51")
+DEFAULT_MODEL = os.getenv("CLAUDE_DEFAULT_MODEL", "fable5.1")
 
 #: `xhigh` is the sweet spot for agentic/coding work on both of these; the
 #: judge path drops to `high`, since it only has to justify a score.
-EFFORT = {"sonnet5": "xhigh", "fable51": "xhigh", "opus55": "xhigh"}
+EFFORT = {"sonnet5": "xhigh", "fable5.1": "xhigh", "opus5.5": "xhigh"}
 
-DISPLAY_NAMES = {"sonnet5": "Claude Sonnet 5", "fable51": "Claude Fable 5.1",
-                 "opus55": "Claude Opus 5.5"}
+DISPLAY_NAMES = {"sonnet5": "Claude Sonnet 5", "fable5.1": "Claude Fable 5.1",
+                 "opus5.5": "Claude Opus 5.5"}
 
 AZURE_RESOURCE = (os.getenv("AZURE_CLAUDE_RESOURCE")
                   or "jenni-m7rybsi6-eastus2")
@@ -163,7 +163,7 @@ SHARED_BASH_TOOL = "bash"
 
 
 def resolve_model(model: str) -> tuple[str, str | None]:
-    """'sonnet5'/'opus55'/'fable51' -> (deployment id, effort).
+    """'sonnet5'/'opus5.5'/'fable5.1' -> (deployment id, effort).
 
     Returns a pair rather than a string because callers unpack it; a full
     id passes through with the default effort.
@@ -193,7 +193,7 @@ def thinking_config(model: str):
     disabling thinking -- on Fable 5.1 omitting it is the only way to get
     its always-on thinking without a 400.
     """
-    if MODELS.get(model, model) == MODELS["fable51"]:
+    if MODELS.get(model, model) == MODELS["fable5.1"]:
         return None
     return {"type": "adaptive"}
 

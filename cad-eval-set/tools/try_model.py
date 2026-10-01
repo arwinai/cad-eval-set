@@ -3,9 +3,9 @@
     python3 tools/try_model.py claude tasks/sling_lift
     python3 tools/try_model.py gpt tasks/living_hinge
     python3 tools/try_model.py gpt:astra tasks/living_hinge
-    python3 tools/try_model.py gemini:flash tasks/smartwatch
-    python3 tools/try_model.py claude:fable51 helical_gear
-    python3 tools/try_model.py claude:opus55 tasks/living_hinge
+    python3 tools/try_model.py gemini:flash3.8 tasks/smartwatch
+    python3 tools/try_model.py claude:fable5.1 helical_gear
+    python3 tools/try_model.py claude:opus5.5 tasks/living_hinge
     python3 tools/try_model.py grok tasks/living_hinge
     python tools/try_model.py kimi:k27code tasks/helical_gear
     python3 tools/try_model.py deepseek tasks/living_hinge
@@ -14,7 +14,7 @@
 
 The model is `route[:variant]` -- route is claude / gpt / gemini / grok /
 kimi / deepseek / glm, variant is that route's own model key (claude:
-sonnet5|opus55|fable51, gpt: gpt56|astra (GPT-6), gemini: pro|flash,
+sonnet5|opus5.5|fable5.1, gpt: gpt56|astra (GPT-6), gemini: pro3.1|flash3.8,
 kimi: k2.7-code; grok, deepseek and glm each have a single deployment and
 take no variant). The task
 is just its folder name under `tasks/`, matched case-insensitively, so
@@ -168,7 +168,7 @@ def task_program(task_dir: Path) -> str:
 
 
 def load_route(spec: str):
-    """`claude:fable51` -> (module, variant, pretty label)."""
+    """`claude:fable5.1` -> (module, variant, pretty label)."""
     route, _, variant = spec.partition(":")
     route = route.lower()
     if route == "claude":
@@ -1424,8 +1424,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument(
         "model",
-        help=("claude[:sonnet5|opus55|fable51] | gpt[:gpt56|astra] | "
-              "gemini[:pro|flash] | grok | kimi[:k27code|k3] | "
+        help=("claude[:sonnet5|opus5.5|fable5.1] | gpt[:gpt56|astra] | "
+              "gemini[:pro3.1|flash3.8] | grok | kimi[:k27code|k3] | "
               "deepseek | glm")
     )
     ap.add_argument("task",
