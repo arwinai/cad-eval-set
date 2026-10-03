@@ -46,6 +46,21 @@ Microsoft Store instead, run this and try again:
 winget install --id Python.Python.3.11 -e --override "/passive PrependPath=1"
 ```
 
+**Codex, only if you want to try the GPT models.** The `gpt` route drives
+OpenAI's Codex command-line tool the way `claude` drives Claude Code. It
+needs Node.js first:
+
+```powershell
+winget install --id OpenJS.NodeJS.LTS -e
+```
+
+Close and reopen PowerShell, then:
+
+```powershell
+npm install -g @openai/codex
+codex --version
+```
+
 **Docker, only for non-SolidWorks tasks.** SolidWorks tasks run on your
 own machine, because SolidWorks cannot run in a container, so skip this
 if that is all you will make. CadQuery, FreeCAD, STEP and Blender tasks
@@ -183,6 +198,40 @@ per run named after the model and the time. Open the newest one. In it:
 - **`report.md`**: how long it took, how many steps, and whether it
   produced the file at all.
 
+## FreeCAD, CadQuery, STEP, and Blender
+
+Mostly the same as SolidWorks, with one difference that matters: where
+the model runs.
+
+**What's identical.** The task folder has the same shape: `environment\`
+with the before model renamed `input.FCStd` (or `input.py`, `input.STEP`,
+`input.blend`) and an `instruction.md` that names the deliverable, for
+example `/app/solution.FCStd`. The command is the same too. try_model reads
+the family from the input file's extension, so `input.FCStd` makes it a
+FreeCAD task automatically:
+
+```powershell
+python tools\try_model.py claude tasks\my_freecad_task
+```
+
+Results land in `_runs\` the same way.
+
+**What's different.** SolidWorks can't run in a container, so those tasks
+run on the host and drive the SolidWorks you have open. FreeCAD tasks run
+inside a Docker container instead. try_model builds the FreeCAD base image
+on the first run, which downloads FreeCAD 1.1.3 and takes several minutes,
+then reuses it. The model works in that container with its own
+`freecadcmd`, so:
+
+- **Docker Desktop must be installed and running.** Step 2 has the install
+  block. Without Docker the run stops with a message rather than silently
+  running on the host.
+- **FreeCAD does not need to be installed on the PC** for the normal path,
+  and nothing needs to be open on screen.
+
+CadQuery, STEP and Blender tasks follow the FreeCAD pattern, each with its
+own base image.
+
 ## 9. Decide
 
 The question is: **did it fail on the engineering, or on the tooling?**
@@ -196,6 +245,28 @@ The question is: **did it fail on the engineering, or on the tooling?**
   good outcome.
 
 ## Things that go wrong
+
+**`solve FAILED: RuntimeError: the Codex CLI is not installed`.** You ran
+the `gpt` route without Codex. Install Node.js and Codex as in step 2,
+reopen PowerShell, and run the same command again.
+
+**`.venv\Scripts\activate` says "running scripts is disabled on this system"**
+(or the same in another language, with `PSSecurityException`). This is a
+Windows default, not a repo problem. Allow local scripts for your own
+account, once, then activate again:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+.venv\Scripts\activate
+```
+
+If you would rather not change the policy, skip activation and call the
+venv's Python directly; every `python` in this guide becomes
+`.venv\Scripts\python`:
+
+```powershell
+.venv\Scripts\python tools\try_model.py claude tasks\camera_bracket
+```
 
 **`python` is not recognised.** Python did not get added to your PATH.
 Re-run the install line at the end of step 2, then close and reopen
